@@ -11,6 +11,7 @@ import Flashcards from "@/components/Flashcards";
 import BadgeUnlock from "@/components/BadgeUnlock";
 import LangSwitch from "@/components/LangSwitch";
 import ConsoleMockup from "@/components/ConsoleMockup";
+import type { ConsoleLine } from "@/components/ConsoleMockup";
 import EditorMockup from "@/components/EditorMockup";
 
 type Step = "lesson" | "task" | "quiz" | "flashcards" | "done";
@@ -22,6 +23,23 @@ const STEP_KEYS: Record<Step, UIKey> = {
   flashcards: "stepFlash",
   done: "stepDone",
 };
+
+function toConsoleShell(value?: string): "PowerShell" | "Bash" {
+  return value?.toLowerCase() === "powershell" ? "PowerShell" : "Bash";
+}
+
+function toConsoleLines(lines: unknown): ConsoleLine[] {
+  if (!Array.isArray(lines)) return [];
+  return lines.map((line) => {
+    if (typeof line === "string") {
+      return { text: line };
+    }
+    if (line && typeof line === "object" && "text" in line) {
+      return line as ConsoleLine;
+    }
+    return { text: String(line ?? "") };
+  });
+}
 
 export default function ModulePageClient({ slug }: { slug: string }) {
   const mod = getModuleBySlug(slug);
@@ -137,8 +155,8 @@ export default function ModulePageClient({ slug }: { slug: string }) {
                     return (
                       <ConsoleMockup
                         key={i}
-                        shell={(v as { shell?: string }).shell ?? "bash"}
-                        lines={v.lines}
+                        shell={toConsoleShell((v as { shell?: string }).shell)}
+                        lines={toConsoleLines(v.lines)}
                         caption={(v as { caption?: { en: string; tr: string } }).caption ? pick((v as { caption?: { en: string; tr: string } }).caption!) : undefined}
                       />
                     );
