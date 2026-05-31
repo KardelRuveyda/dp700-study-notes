@@ -53,6 +53,13 @@ export default function ModulePageClient({ slug }: { slug: string }) {
   }
   if (!progress) return <div className="text-slate-400">{t("loading")}</div>;
 
+  const sourceLabel =
+    typeof mod.source.label === "string"
+      ? mod.source.label
+      : mod.source.label
+      ? pick(mod.source.label)
+      : t("openSource");
+
   function finishModule() {
     if (!mod || !progress) return;
     const next = completeModule(progress, mod.slug, mod.badge.id, 100);
@@ -110,7 +117,7 @@ export default function ModulePageClient({ slug }: { slug: string }) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-full border border-cyan-700 bg-cyan-900/20 text-cyan-300 hover:bg-cyan-900/40"
               >
-                {t("source")} · {mod.source.label ?? t("openSource")}
+                {t("source")} · {sourceLabel}
               </a>
             )}
             <div>
