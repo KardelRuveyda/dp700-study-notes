@@ -49,7 +49,7 @@ export default function ModulePageClient({ slug }: { slug: string }) {
   }, [progress, mod, step]);
 
   if (!mod) {
-    return <div className="text-slate-400">{t("notFound")}</div>;
+    return <div className="text-slate-400">{t("loading")}</div>;
   }
   if (!progress) return <div className="text-slate-400">{t("loading")}</div>;
 
